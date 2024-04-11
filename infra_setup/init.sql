@@ -23,7 +23,8 @@ create table if not exists ALT_SCHOOL.CUSTOMERS
     device_id uuid not null,
     location varchar not null,
     currency bigint not null
-)
+);
+
 -- TODO: provide the command to copy the customers data in the /data folder into ALT_SCHOOL.CUSTOMERS
 COPY ALT_SCHOOL.CUSTOMERS (customer_id, device_id, location, currency)
 FROM '/data/customers.csv' DELIMITER ',' CSV HEADER;
