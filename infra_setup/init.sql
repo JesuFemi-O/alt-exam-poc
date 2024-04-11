@@ -17,12 +17,12 @@ FROM '/data/products.csv' DELIMITER ',' CSV HEADER;
 
 -- setup customers table following the example above
 -- TODO: Provide the DDL statment to create this table ALT_SCHOOL.CUSTOMERS
-create table if not exists ALT_SCHOOL.CUSTOMERS
+create table if not exists ALT_SCHOOL.customers
 (
     customer_id uuid not null primary key,
     device_id uuid not null,
     location varchar not null,
-    currency bigint not null
+    currency varchar not null
 );
 
 -- TODO: provide the command to copy the customers data in the /data folder into ALT_SCHOOL.CUSTOMERS
@@ -38,6 +38,7 @@ create table if not exists ALT_SCHOOL.ORDERS
     status varchar not null,
     checked_out_at timestamp not null
 );
+
 -- provide the command to copy orders data into POSTGRES
 COPY ALT_SCHOOL.ORDERS (order_id, customer_id, status, checked_out_at)
 FROM '/data/orders.csv' DELIMITER ',' CSV HEADER;
@@ -63,7 +64,7 @@ create table if not exists ALT_SCHOOL.EVENTS
 );
 
 -- TODO: provide the command to copy ALT_SCHOOL.EVENTS data into POSTGRES
-COPY ALT_SCHOOL.events (event_id, customer_id, event_data, event_timestamp)
+COPY ALT_SCHOOL.EVENTS (event_id, customer_id, event_data, event_timestamp)
 FROM '/data/events.csv' DELIMITER ',' CSV HEADER;
 
 
