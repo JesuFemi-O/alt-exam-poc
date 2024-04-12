@@ -22,7 +22,7 @@ join products p on li.item_id = p.id
 select sub.item_id as product_id, sub.name as product_name, count(sub.order_id)as num_times_in_successful_orders
 from sub
 group by sub.item_id, sub.name
-order by num_times_in_successful_orders desc
+order by num_times_in_successful_orders desc;
 -- The most ordered item has it's product_id as '7', prooduct_name as 'Apple AirPods Pro' with the number of successful orders as '735'
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ##Part 2A- Question 2
@@ -34,18 +34,22 @@ order by num_times_in_successful_orders desc
 ##Part 2B- Question 1
 --Made use of the CTE I created earlier in question 2a(that is made up of event table and orders table and used that to find the successful checkout
 with successful_checkout as (
-SELECT o.customer_id, o.status, o.order_id     
-FROM orders o
-JOIN events e ON o.customer_id = e.customer_id
-WHERE o.status = 'success'
-AND e.event_data ->> 'event_type' = 'checkout'
-AND e.event_timestamp = o.checked_out_at
+select o.customer_id, o.status, o.order_id     
+from orders o
+join events e ON o.customer_id = e.customer_id
+where o.status = 'success'
+and e.event_data ->> 'event_type' = 'checkout'
+and e.event_timestamp = o.checked_out_at
 )
 --Here I joined the customers table with the successful checkout table to get the location
 select location, count(sc.order_id) as checkout_count
 from successful_checkout sc
 join customers c on sc.customer_id = c.customer_id
 group by location
-order by checkout_count desc
+order by checkout_count desc;
 --we can see that the country with the highest number of successful orders is Korea with a total checkout number of 17
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Part 2B- Question 2
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+##Part 2B- Question 3
