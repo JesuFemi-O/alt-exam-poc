@@ -20,7 +20,7 @@ FROM '/data/products.csv' DELIMITER ',' CSV HEADER;
 -- TODO: Provide the DDL statment to create this table ALT_SCHOOL.CUSTOMERS
  create table if not exists ALT_SCHOOL.CUSTOMERS
 (
-    cutstomer_id uuid not null primary key,
+    customer_id uuid not null primary key,
     device_id uuid not null ,
     location varchar not null,
     currency bigint  not null
