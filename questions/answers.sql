@@ -153,9 +153,9 @@ WITH completed_checkouts AS (
 ),
 customer_visits AS (
 -- And in order for me to find the average of the customer, I went ahead to create "customer_visits" that have the
--- counts of customers who visited and also went ahead to make a successfull checkout not those that only visited
--- with a successful checkout.
-    SELECT customer_id, COUNT(customer_id) AS num_visits
+-- counts of the timestamp of each customer's visit and also went ahead to make a successfull checkout not those who only visited
+-- without making any successful checkout.
+    SELECT customer_id, COUNT(distinct event_data->>'timestamp') AS num_visits
     FROM events
     WHERE customer_id IN (SELECT customer_id FROM completed_checkouts)
     AND event_data->>'event_type' = 'visit'
