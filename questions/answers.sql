@@ -3,7 +3,8 @@
 -- 
 
 WITH checkouts AS (
-	-- filter rows with successful checkouts
+	-- CTE1 ->> checkouts: 
+    -- filter rows with successful checkouts identified by custmer_id
     SELECT * 
     FROM alt_school.events
     WHERE customer_id IN (
@@ -13,6 +14,7 @@ WITH checkouts AS (
     )
 ),
 removed_items AS (
+    -- CTE2 ->> removed_items
 	-- filter rows with items removed from cart after adding to the cart
     SELECT event_id, customer_id, event_data, CONCAT(customer_id, '_', event_data->>'item_id') AS ce 
     FROM alt_school.events
@@ -28,13 +30,18 @@ removed_items AS (
     )
 ),
 checker as (
-	-- table with only successful checkouts and 
+    -- CTE3 ->> checker
+	-- table with only items that were added to the cart, not removed and made it successful checkouts
 	SELECT * 
 	FROM checkouts
 	WHERE event_id NOT IN (
 		SELECT event_id FROM removed_items
 	)
 )
+
+-- solution query:
+-- product_id, product_name and num_times_in_successful_orders
+-- from events, products table joining on (item_id and product_id)
 
 SELECT 
     c.event_data->>'item_id' AS product_id,
@@ -44,7 +51,7 @@ FROM
     checker AS c
 JOIN 
     alt_school.products AS p ON c.event_data->>'item_id' = CAST(p.id AS TEXT)
---                                                    ^^^^^^^^^^^^^^^^^^^^^^
+--                                                    
 WHERE 
     c.event_data->>'event_type' = 'add_to_cart'
 GROUP BY 
@@ -60,7 +67,8 @@ LIMIT 1;
 -- 
 
 WITH checkouts AS (
-	-- filter rows with successful checkouts
+	-- CTE1 ->> checkouts: 
+    -- filter rows with successful checkouts identified by custmer_id
     SELECT * 
     FROM alt_school.events
     WHERE customer_id IN (
@@ -70,7 +78,8 @@ WITH checkouts AS (
     )
 ),
 removed_items AS (
-	-- filter rows with items removed from cart after adding to the cart
+	-- CTE2 ->> removed_items
+    -- filter rows with items removed from cart after adding to the cart
     SELECT event_id, customer_id, event_data, CONCAT(customer_id, '_', event_data->>'item_id') AS ce 
     FROM alt_school.events
     WHERE CONCAT(customer_id, '_', event_data->>'item_id') IN (
@@ -85,7 +94,8 @@ removed_items AS (
     )
 ),
 checker as (
-	-- table with only successful checkouts and 
+	-- CTE3 ->> checker
+    -- table with only items that were added to the cart, and made it successful checkouts 
 	SELECT * 
 	FROM checkouts
 	WHERE event_id NOT IN (
@@ -93,6 +103,8 @@ checker as (
 	)
 )
 
+-- solution query:
+-- 
 
 SELECT 
     c1.customer_id,
@@ -118,7 +130,8 @@ LIMIT 5;
 
 
 WITH checkouts AS (
-	-- filter rows with successful checkouts
+	-- CTE1 ->> checkouts: 
+    -- filter rows with successful checkouts identified by custmer_id
     SELECT * 
     FROM alt_school.events
     WHERE customer_id IN (
@@ -128,7 +141,8 @@ WITH checkouts AS (
     )
 ),
 removed_items AS (
-	-- filter rows with items that were added and removed from the cart
+	-- CTE2 ->> removed_items
+    -- filter rows with items removed from cart after adding to the cart
     SELECT event_id, customer_id, event_data, CONCAT(customer_id, '_', event_data->>'item_id') AS ce 
     FROM alt_school.events
     WHERE CONCAT(customer_id, '_', event_data->>'item_id') IN (
@@ -143,7 +157,8 @@ removed_items AS (
     )
 ),
 checker as (
-	-- table with only successful checkouts and 
+	-- CTE3 ->> checker
+    -- table with only items that were added to the cart, not removed and made it successful checkouts
 	SELECT * 
 	FROM checkouts
 	WHERE event_id NOT IN (
