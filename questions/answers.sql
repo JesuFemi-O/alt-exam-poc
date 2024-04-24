@@ -1,9 +1,9 @@
 --2a--
 -- product_id, product_name, num_times_in_successful_orders.
 
--- To solve this problem, join the orders table on the line item table, then join that on the product table.
--- the logic behind it is to get the successful order and then check for the item in those orders and how many times they appear. 
---existence of each unique instance on a sucessful order_id id += 1
+  -- To solve this problem, join the orders table on the line item table, then join that on the product table.
+  -- the logic behind it is to get the successful order and then check for the item in those orders and how many times they appear. 
+  --existence of each unique instance on a sucessful order_id id += 1
 select p.id as product_id, p.name as product_name, count(*) as num_times_in_successful_orders
 from alt_school.orders o
 inner join alt_school.line_items l
