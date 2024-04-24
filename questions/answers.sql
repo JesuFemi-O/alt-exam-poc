@@ -1,6 +1,9 @@
 
 -- part 2.a.i: most ordered item based on the number of times it appears in an order cart that checked out successfully?
--- 
+
+--  product_id |    product_name    | num_times_in_successful_orders 
+--  -----------+--------------------+--------------------------------
+--  3          | Sony PlayStation 5 |                           1172
 
 WITH checkouts AS (
 	-- CTE1 ->> checkouts: 
@@ -64,7 +67,14 @@ LIMIT 1;
 
 
 -- part 2.a.ii: top five spenders
--- 
+
+--              customer_id              |  location   | total_spend 
+-- --------------------------------------+-------------+-------------
+--  c9eca26c-dfc4-4569-b404-ace1f3c27c2c | France      |    34935.70
+--  662af3bb-cd98-42b8-a299-6b42c23821e6 | Singapore   |    33831.78
+--  bf3e38e6-29c9-40c0-97a2-3ceaa7d305ad | Senegal     |    31525.73
+--  3c8e3261-bb06-4452-9342-11850addf518 | Switzerland |    31449.58
+--  f2e8a54d-6437-43ef-822c-74af0addcca4 | Liberia     |    30999.77
 
 WITH checkouts AS (
 	-- CTE1 ->> checkouts: 
@@ -128,6 +138,9 @@ LIMIT 5;
 
 -- part2.b.i: the most common location (country) where successful checkouts occurred.
 
+-- location | checkout_count 
+-- ---------+----------------
+-- Korea    |             17
 
 WITH checkouts AS (
 	-- CTE1 ->> checkouts: 
@@ -185,9 +198,29 @@ LIMIT 1;
 
 -- part 2.b.ii : customers who abandoned their carts and count the number of events (excluding visits) that occurred before the abandonment.
 
+--              customer_id              | num_events 
+--  -------------------------------------+------------
+--  1c2b1a0d-4627-42cb-a55a-24c7c92611b0 |         22
+--  713fe25b-a6c1-4978-9a56-2a5f711137d1 |         22
+--  82ae4c93-06a8-4530-9865-d06676acfb6f |         22
+--  3a09f477-dbee-4a17-9ef0-36f6bbd2e1dc |         22
+--  eb7dcb88-073d-403e-bdd4-1e5725fe2338 |         22
+--  8afb120e-84a2-4d64-afc5-18891385d3b3 |         22
+--  b1e5d31e-1feb-41cf-9a63-968c70c33744 |         22
+--  70676244-3cd0-40f0-a749-8a406059e70c |         22
+--  b4ee8d72-9064-4372-85c7-7ae091a0572c |         22
+--  f0b1a808-7def-4d7f-b2cb-723e92797f3f |         22
+--  2519a6f0-4287-40b5-a0eb-c994bace8543 |         22
+--  eeeea458-d704-4ef9-b7e6-618d2a8c47ed |         21
+--  7105dba6-13c9-46f1-947f-9b8c246d14a5 |         21
+--  a6a41da2-3e3c-4ef3-99e3-41e4777581a1 |         21
+--  64af4631-72c1-4388-ab42-38ebab1767ca |         21
+--    ---   - -- - -- - -- -  ---        |         --
+--                  < CONTD >            |  < CONTD >
+
 with sheet1 as (
 	-- this query selects all event types other than visits from abandoned carts.
-	-- here, we have an abandoned cart as a cart that does not make  asuccessful checkout.
+	-- here, we have an abandoned cart as a cart that does not make a successful checkout.
 	select * from alt_school.events
 		where customer_id not in (
 			select customer_id from alt_school.events where event_data->>'status'='success' or event_data ->> 'status' = 'failed'
@@ -203,8 +236,12 @@ order by num_events desc;
 
 --part 2.b.iii
 
+-- average_visits 
+-- ---------------
+--           4.47
+
 with visit_per_customer as (
-	---this subquery selects all visits from successful checkouts
+	---this subquery selects only visits from successful checkouts
 	select distinct customer_id, count(customer_id) as num_visits
 	from alt_school.events
 	where event_data->>'event_type'='visit' and customer_id in (
@@ -213,5 +250,7 @@ with visit_per_customer as (
 	group by customer_id
 	order by num_visits desc
 )
-select ROUND(AVG(num_visits), 2) 
+
+-- average visit per customer
+select ROUND(AVG(num_visits), 2) as average_visits
 from visit_per_customer;
