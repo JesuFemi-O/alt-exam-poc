@@ -2,55 +2,64 @@
 -- Create schema
 CREATE SCHEMA IF NOT EXISTS ALT_SCHOOL;
 
-
--- create and populate tables
-create table if not exists ALT_SCHOOL.PRODUCTS
+-- Create and populate PRODUCTS table
+CREATE TABLE IF NOT EXISTS ALT_SCHOOL.PRODUCTS
 (
-    id  serial primary key,
-    name varchar not null,
-    price numeric(10, 2) not null
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    price NUMERIC(10, 2) NOT NULL
 );
-
 
 COPY ALT_SCHOOL.PRODUCTS (id, name, price)
 FROM '/data/products.csv' DELIMITER ',' CSV HEADER;
 
--- setup customers table following the example above
-
--- TODO: Provide the DDL statment to create this table ALT_SCHOOL.CUSTOMERS
-
--- TODO: provide the command to copy the customers data in the /data folder into ALT_SCHOOL.CUSTOMERS
-
-
-
--- TODO: complete the table DDL statement
-create table if not exists ALT_SCHOOL.ORDERS
+-- Create and populate CUSTOMERS table
+CREATE TABLE IF NOT EXISTS ALT_SCHOOL.CUSTOMERS
 (
-    order_id uuid not null primary key,
-    -- provide the other fields
+    customer_id UUID PRIMARY KEY,
+    device_id UUID,
+    location VARCHAR,
+    currency VARCHAR
 );
 
+COPY ALT_SCHOOL.CUSTOMERS (customer_id, device_id, location, currency)
+FROM '/data/customers.csv' DELIMITER ',' CSV HEADER;
 
--- provide the command to copy orders data into POSTGRES
-
-
-create table if not exists ALT_SCHOOL.LINE_ITEMS
+-- Create and populate ORDERS table
+CREATE TABLE IF NOT EXISTS ALT_SCHOOL.ORDERS
 (
-    line_item_id serial primary key,
-    -- provide the remaining fields
+    order_id UUID NOT NULL PRIMARY KEY,
+    customer_id UUID,
+    status VARCHAR,
+    checked_out_at TIMESTAMP
 );
 
+COPY ALT_SCHOOL.ORDERS (order_id, customer_id, status, checked_out_at)
+FROM '/data/orders.csv' DELIMITER ',' CSV HEADER;
 
--- provide the command to copy ALT_SCHOOL.LINE_ITEMS data into POSTGRES
-
-
--- setup the events table following the examle provided
-create table if not exists ALT_SCHOOL.EVENTS
+-- Create and populate LINE_ITEMS table
+CREATE TABLE IF NOT EXISTS ALT_SCHOOL.LINE_ITEMS
 (
-    -- TODO: PROVIDE THE FIELDS
+    line_item_id SERIAL PRIMARY KEY,
+    order_id UUID,
+    item_id BIGINT,
+    quantity BIGINT
 );
 
--- TODO: provide the command to copy ALT_SCHOOL.EVENTS data into POSTGRES
+COPY ALT_SCHOOL.LINE_ITEMS (line_item_id, order_id, item_id, quantity)
+FROM '/data/line_items.csv' DELIMITER ',' CSV HEADER;
+
+-- Create and populate EVENTS table
+CREATE TABLE IF NOT EXISTS ALT_SCHOOL.EVENTS
+(
+    event_id BIGINT PRIMARY KEY,
+    customer_id UUID,
+    event_date JSONB,
+    event_timestamp TIMESTAMP
+);
+
+COPY ALT_SCHOOL.EVENTS (event_id, customer_id, event_date, event_timestamp)
+FROM '/data/events.csv' DELIMITER ',' CSV HEADER;
 
 
 
