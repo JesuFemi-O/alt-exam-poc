@@ -15,4 +15,5 @@ services:
       - ./infra_setup/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
-  postgres_data:
+  postgres_data: 
+
